@@ -35,12 +35,16 @@ class Board:
             self.tiles.reverse()
 
     def move(self, move):
+        self.macro_move(self.cboard.parse_san(move).uci())
+        self.cboard.push_san(move)
+
+
+    # Takes in a UCI string (how I implemented it before, so didn't want to change it)
+    def macro_move(self, move):
         if self.side == self.cboard.turn:
             print("The program has decided on the move: ", move)
             source = self.tiles[(int(move[1]) - 1) * 8 + array_indexer[move[0]]] # ex. e2e4
             destination = self.tiles[(int(move[3]) - 1) * 8 + array_indexer[move[2]]]
             pyautogui.click(source)
             pyautogui.click(destination)
-
-        self.cboard.push(chess.Move.from_uci(move))
 

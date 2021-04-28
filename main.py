@@ -3,6 +3,7 @@ import chess, pyautogui
 from board import Board
 from eval import first_move
 
+# After mouse macro will alt-tab back into terminal for next input
 def terminal_swap():
     pyautogui.keyDown('alt')
     pyautogui.press('tab')
@@ -29,13 +30,13 @@ if __name__ == "__main__":
             board.move(first_move(board.cboard))
             print(board.cboard)
             terminal_swap()
-            opp_move = input("Input UCI string of black's move: ")
+            opp_move = input("Input AN of black's move: ")
             board.move(opp_move)
     
     elif board.side == chess.BLACK:
         while not board.cboard.is_checkmate():
             print(board.cboard)
-            opp_move = input("Input UCI string of white's move: ")
+            opp_move = input("Input AN of white's move: ")
             board.move(opp_move)
             print(board.cboard)
             board.move(first_move(board.cboard))
