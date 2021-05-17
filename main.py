@@ -1,7 +1,8 @@
 "Controls input on terminal and gathering necessary information to decide the next move."
+
 import chess, pyautogui
 from board import Board
-from eval import first_move
+from eval import first_move, random_move
 
 # After mouse macro will alt-tab back into terminal for next input
 def terminal_swap():
@@ -27,7 +28,7 @@ if __name__ == "__main__":
     if board.side == chess.WHITE:
         while not board.cboard.is_checkmate():
             print(board.cboard)
-            board.move(first_move(board.cboard))
+            board.move(random_move(board.cboard))
             print(board.cboard)
             terminal_swap()
             opp_move = input("Input AN of black's move: ")
@@ -39,5 +40,5 @@ if __name__ == "__main__":
             opp_move = input("Input AN of white's move: ")
             board.move(opp_move)
             print(board.cboard)
-            board.move(first_move(board.cboard))
+            board.move(random_move(board.cboard))
             terminal_swap()
