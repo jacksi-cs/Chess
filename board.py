@@ -3,6 +3,7 @@
 import chess
 import pyautogui
 from enum import Enum
+import time
 
 array_indexer = {
     "a": 0,
@@ -14,6 +15,13 @@ array_indexer = {
     "g": 6,
     "h": 7
 }
+
+# Mouse macro that will alt-tab back into terminal/window
+def window_swap():
+    print("SWAP")
+    pyautogui.keyDown('alt')
+    pyautogui.press('tab')
+    pyautogui.keyUp('alt')
 
 class Board:
     cboard = chess.Board()
@@ -34,7 +42,9 @@ class Board:
         if self.side == chess.BLACK:
             self.tiles.reverse()
 
-    def move(self, move):
+    def move(self, move, swap):
+        if swap:
+            window_swap()
         self.macro_move(self.cboard.parse_san(move).uci())
         self.cboard.push_san(move)
 
