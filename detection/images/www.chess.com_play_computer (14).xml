@@ -1,0 +1,50 @@
+<annotation>
+	<folder>images</folder>
+	<filename>www.chess.com_play_computer (14).png</filename>
+	<path>C:\Users\Jack\Desktop\Github Projects\Chess\detection\images\www.chess.com_play_computer (14).png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>783</width>
+		<height>783</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>K</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>107</xmin>
+			<ymin>591</ymin>
+			<xmax>188</xmax>
+			<ymax>678</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>N</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>305</xmin>
+			<ymin>203</ymin>
+			<xmax>380</xmax>
+			<ymax>287</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>k</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>105</xmin>
+			<ymin>201</ymin>
+			<xmax>188</xmax>
+			<ymax>288</ymax>
+		</bndbox>
+	</object>
+</annotation>
