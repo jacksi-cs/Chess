@@ -48,7 +48,6 @@ class Board:
         self.macro_move(self.cboard.parse_san(move).uci())
         self.cboard.push_san(move)
 
-
     # Takes in a UCI string (how I implemented it before, so didn't want to change it)
     def macro_move(self, move):
         if self.side == self.cboard.turn:
