@@ -1,0 +1,48 @@
+item {
+	id: 1
+	name: 'r'
+}
+item {
+	id: 2
+	name: 'n'
+}
+item {
+	id: 3
+	name: 'b'
+}
+item {
+	id: 4
+	name: 'q'
+}
+item {
+	id: 5
+	name: 'k'
+}
+item {
+	id: 6
+	name: 'p'
+}
+item {
+	id: 7
+	name: 'R'
+}
+item {
+	id: 8
+	name: 'N'
+}
+item {
+	id: 9
+	name: 'B'
+}
+item {
+	id: 10
+	name: 'Q'
+}
+item {
+	id: 11
+	name: 'K'
+}
+item {
+	id: 12
+	name: 'P'
+}

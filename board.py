@@ -18,7 +18,6 @@ array_indexer = {
 
 # Mouse macro that will alt-tab back into terminal/window
 def window_swap():
-    print("SWAP")
     pyautogui.keyDown('alt')
     pyautogui.press('tab')
     pyautogui.keyUp('alt')
