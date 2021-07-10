@@ -1,13 +1,8 @@
-from chess_detection_time import func
-from stopwatch import Stopwatch, profile
-from board import Board
 import chess
+board = chess.Board()
 
-board = Board(chess.White)
-
-while True:
-    stopwatch = Stopwatch()
-    stopwatch.start()
-    func()
-    stopwatch.stop()
-    print("3 ", stopwatch.elapsed)
+move = chess.Move.from_uci("a2a4")
+board.push(move)
+test = board
+board.pop()
+print(test)

@@ -15,7 +15,7 @@ from matplotlib import pyplot as plt
 from PIL import Image, ImageGrab, ImageDraw
 
 # imported for screen capture
-from mss import mss
+# from mss import mss
 
 
 from object_detection.utils import label_map_util
@@ -26,6 +26,7 @@ import cv2
 import time
 from stopwatch import Stopwatch, profile
 
+print(X, TwoSlopeNorm, np, os, indices, urllib, sys, tarfile, tf, zipfile, defaultdict, StringIO, plt, label_map_util, vis_util)
 
 
 "Will probably move this to a more suitable place"
@@ -60,21 +61,7 @@ PATH_TO_LABELS = os.path.join(OFFSET_PATH +'data', 'object-detection.pbtxt')
 
 NUM_CLASSES = 12
 
-
-# ## Download Model
-
-# In[5]:
-
-# opener = urllib.request.URLopener()
-# opener.retrieve(DOWNLOAD_BASE + MODEL_FILE, MODEL_FILE)
-# tar_file = tarfile.open(MODEL_FILE)
-# for file in tar_file.getmembers():
-#     file_name = os.path.basename(file.name)
-#     if 'frozen_inference_graph.pb' in file_name:
-#         tar_file.extract(file, os.getcwd())
-
-
-# ## Load a (frozen) Tensorflow model into memory.
+print("ASD: ", MODEL_NAME, OFFSET_PATH, PATH_TO_CKPT, PATH_TO_LABELS, NUM_CLASSES)
 
 # In[6]:
 

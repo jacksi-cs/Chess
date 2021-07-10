@@ -3,12 +3,14 @@
 import chess, pyautogui
 from board import Board, window_swap
 from eval import first_move, random_move
+import models.research.object_detection.chess_detection_test as cdt
+from eval import minimax, naive_eval
 
 if __name__ == "__main__":
     input("Press enter to start game...")
     
     while True:
-        side = input("What side are you?")
+        side = input("What side are you? ")
 
         if side.lower() == "white":
             board = Board(chess.WHITE)
@@ -21,17 +23,18 @@ if __name__ == "__main__":
 
     if board.side == chess.WHITE:
         while not board.cboard.is_checkmate():
-            print(board.cboard)
-            board.move(random_move(board.cboard), True)
-            print(board.cboard)
+            print(board.cboard, naive_eval(board.cboard))
+            board.move(minimax(board.cboard, naive_eval, 2), True)
+            print(board.cboard, naive_eval(board.cboard))
             window_swap()
-            opp_move = input("Input AN of black's move: ")
+            opp_move = cdt.detection(board)
+            # opp_move = input("Input AN of black's move: ")
             board.move(opp_move, False)
     
     elif board.side == chess.BLACK:
         while not board.cboard.is_checkmate():
             print(board.cboard)
-            opp_move = input("Input AN of white's move: ")
+            opp_move = cdt.detection(board)
             board.move(opp_move, False)
             print(board.cboard)
             board.move(random_move(board.cboard), True)
