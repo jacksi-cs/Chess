@@ -19,9 +19,9 @@ def generate_tree(id, prnt, cbrd, mv, depth):
         id = 0
         for move in cbrd.legal_moves:
             cbrd.push(move)
-            if cbrd.board_fen() not in recurr_list:
+            if (cbrd.board_fen(),cbrd.castling_rights) not in recurr_list:
                 generate_tree(id, node, chess.Board(cbrd.fen()), move, depth-1)
-                recurr_list.append(cbrd.board_fen())
+                recurr_list.append((cbrd.board_fen(),cbrd.castling_rights))
             cbrd.pop()
             id += 1
 
@@ -29,12 +29,59 @@ def generate_tree(id, prnt, cbrd, mv, depth):
             print(counter)
             return node
 
+def recur_func(cboard, eval, node, turn):
+    if node.is_leaf:
+        # print(node)
+        node.score = eval(node.cboard)
+        # print(eval_score)
+        return node.score
+    
+    for child in node.children:
+        if node.score == None:
+            eval_score = recur_func(cboard, eval, child, not turn)
+            node.score = eval_score
+        elif turn: # White's turn (max node)
+            eval_score = recur_func(cboard, eval, child, not turn)
+            if node.score < eval_score:
+                # print(eval_score)
+                node.score = eval_score
+        else: # Black's turn (min node)
+            eval_score = recur_func(cboard, eval, child, not turn)
+            if node.score > eval_score:
+                # print(eval_score)
+                node.score = eval_score
+
+    return node.score
+
+def minimax_recur(cboard, eval, depth):
+    root = generate_tree(0, None, cboard, None, depth)
+    # print(root, root.cboard, root.is_leaf)
+    recur_func(cboard, eval, root, cboard.turn)
+    # print(RenderTree(root))
+    
+    optimal_node = None
+    for child in root.children:
+        if optimal_node == None:
+            optimal_node = child
+        else:
+            if cboard.turn: # White, therefore maximize
+                if child.score > optimal_node.score:
+                    optimal_node = child
+            else: # Black, therefore minimize
+                if child.score < optimal_node.score:
+                    optimal_node = child
+    
+    return cboard.san(optimal_node.move)
+
+
+###########################################
+
 def minimax(cboard, eval, depth):
     stopwatch = Stopwatch()
     root = generate_tree(0, None, cboard, None, depth)
     stopwatch.stop()
     print("GENERATING TREE: ", str(stopwatch))
-    # print(RenderTree(root))
+    print(RenderTree(root))
 
     stopwatch.restart()
 
@@ -128,6 +175,7 @@ counter =0
 # Naive evaluation function (piece capture, checkmate)
 # White trying to maximize, black is trying to minimize
 def naive_eval(cboard):
+    # print(cboard.board_fen)
     global counter
     counter += 1
     if cboard.is_checkmate():
@@ -150,4 +198,5 @@ def naive_eval(cboard):
     return white_count - black_count
 
 # MAIN
-minimax(chess.Board("rnbqkbnr/ppppp1pp/8/8/8/5p2/PPPPPPPP/RNBQKBNR w KQkq - 0 1"), naive_eval, 3)
+print("ASD: ", minimax_recur(chess.Board("rnbqkbnr/ppppp1pp/8/5p2/8/3BP3/PPPP1PPP/RNBQK1NR w KQkq - 0 1"), naive_eval, 3))
+# minimax(chess.Board("rnbqkbnr/ppppp1pp/8/8/8/5p2/PPPPPPPP/RNBQKBNR w KQkq - 0 1"), naive_eval, 3)
