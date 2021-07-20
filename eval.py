@@ -14,7 +14,7 @@ def generate_tree(id, prnt, cbrd, mv, depth):
     global recurr_list
     counter += 1
 
-    if depth > 0:
+    if depth >= 0:
         node = Node(id, parent = prnt, cboard=cbrd, move=mv, score=None)
         id = 0
         for move in cbrd.legal_moves:
@@ -26,7 +26,7 @@ def generate_tree(id, prnt, cbrd, mv, depth):
             id += 1
 
         if (prnt == None):
-            print(counter)
+            # print(counter)
             return node
 
 def recur_func(cboard, eval, node, turn):
@@ -54,6 +54,8 @@ def recur_func(cboard, eval, node, turn):
     return node.score
 
 def minimax_recur(cboard, eval, depth):
+    global recurr_list
+    recurr_list = [] # Emptying global cache of board states previously seen, find a better way to design this
     root = generate_tree(0, None, cboard, None, depth)
     # print(root, root.cboard, root.is_leaf)
     recur_func(cboard, eval, root, cboard.turn)
@@ -71,6 +73,8 @@ def minimax_recur(cboard, eval, depth):
                 if child.score < optimal_node.score:
                     optimal_node = child
     
+    print("optimal move: ", optimal_node.move, "score: ", optimal_node.score)
+    print(optimal_node.children)
     return cboard.san(optimal_node.move)
 
 
@@ -171,7 +175,7 @@ def random_move(cboard):
     return cboard.san(random.choice(list(cboard.legal_moves)))
 
 
-counter =0 
+counter=0 
 # Naive evaluation function (piece capture, checkmate)
 # White trying to maximize, black is trying to minimize
 def naive_eval(cboard):
@@ -197,6 +201,6 @@ def naive_eval(cboard):
 
     return white_count - black_count
 
-# MAIN
-print("ASD: ", minimax_recur(chess.Board("rnbqkbnr/ppppp1pp/8/5p2/8/3BP3/PPPP1PPP/RNBQK1NR w KQkq - 0 1"), naive_eval, 3))
-# minimax(chess.Board("rnbqkbnr/ppppp1pp/8/8/8/5p2/PPPPPPPP/RNBQKBNR w KQkq - 0 1"), naive_eval, 3)
+# # MAIN
+board = chess.Board("rnbqkb1r/ppp1pppp/5n2/3p2N1/8/8/PPPPPPPP/RNBQKB1R w KQkq - 2 3")
+minimax_recur(board, naive_eval, 2)

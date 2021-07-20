@@ -4,7 +4,7 @@ import chess, pyautogui
 from board import Board, window_swap
 from eval import first_move, random_move
 import models.research.object_detection.chess_detection_test as cdt
-from eval import minimax, naive_eval
+from eval import minimax_recur, naive_eval
 
 if __name__ == "__main__":
     input("Press enter to start game...")
@@ -23,9 +23,9 @@ if __name__ == "__main__":
 
     if board.side == chess.WHITE:
         while not board.cboard.is_checkmate():
-            print(board.cboard, naive_eval(board.cboard))
-            board.move(minimax(board.cboard, naive_eval, 2), True)
-            print(board.cboard, naive_eval(board.cboard))
+            print(board.cboard)
+            board.move(minimax_recur(board.cboard, naive_eval, 2), True)
+            print(board.cboard)
             window_swap()
             opp_move = cdt.detection(board)
             # opp_move = input("Input AN of black's move: ")
