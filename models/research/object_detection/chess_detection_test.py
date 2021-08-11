@@ -224,7 +224,7 @@ def detection(board):
                                 if int(x_avr) in range(board.board_list[index][0]-20, board.board_list[index][0]+20) and int(y_avr) in range(board.board_list[index][1]-20, board.board_list[index][1]+20):
                                     "Actual important component of code"
                                     new_piece_list[index] = classes[0][b]
-                #print(counter)
+
                 i1 = None
                 i2 = None
 
@@ -236,6 +236,14 @@ def detection(board):
                             break
                         elif new_piece_list[16] != board.piece_list[16]:
                             i2 = 16
+                            break
+
+                    elif i1 == 39:
+                        if new_piece_list[55] != board.piece_list[55]:
+                            i2 = 55
+                            break
+                        elif new_piece_list[23] != board.piece_list[23]:
+                            i2 = 23
                             break
 
                     if new_piece_list[i] != board.piece_list[i]:

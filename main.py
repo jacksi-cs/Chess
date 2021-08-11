@@ -24,7 +24,7 @@ if __name__ == "__main__":
     if board.side == chess.WHITE:
         while not board.cboard.is_checkmate():
             print(board.cboard)
-            board.move(minimax_recur(board.cboard, naive_eval, 2), True)
+            board.move(minimax_recur(board.cboard, naive_eval, 2), True) # Depth count does not include root; how deep FROM the root
             print(board.cboard)
             window_swap()
             opp_move = cdt.detection(board)

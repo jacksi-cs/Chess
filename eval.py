@@ -8,6 +8,22 @@ from stopwatch import Stopwatch
 
 counter = 0
 recurr_list = []
+
+piece_value = {
+    'P' : 1,
+    'N' : 3,
+    'B' : 3,
+    'R' : 5,
+    'Q' : 9,
+    'K' : 0, # Kings will always be on the board
+    'p' : -1,
+    'n' : -3,
+    'b' : -3,
+    'r' : -5,
+    'q' : -9,
+    'k' : 0
+}
+
 # Constructs minimax tree recursively
 def generate_tree(id, prnt, cbrd, mv, depth):
     global counter
@@ -74,7 +90,7 @@ def minimax_recur(cboard, eval, depth):
                     optimal_node = child
     
     print("optimal move: ", optimal_node.move, "score: ", optimal_node.score)
-    print(optimal_node.children)
+    # print(optimal_node.children)
     return cboard.san(optimal_node.move)
 
 
@@ -84,8 +100,8 @@ def minimax(cboard, eval, depth):
     stopwatch = Stopwatch()
     root = generate_tree(0, None, cboard, None, depth)
     stopwatch.stop()
-    print("GENERATING TREE: ", str(stopwatch))
-    print(RenderTree(root))
+    # print("GENERATING TREE: ", str(stopwatch))
+    # print(RenderTree(root))
 
     stopwatch.restart()
 
@@ -195,12 +211,14 @@ def naive_eval(cboard):
     board_fen = cboard.board_fen()
     for char in board_fen:
         if char.isupper():
-            white_count += 1
+            white_count += piece_value[char]
         elif char.islower():
-            black_count += 1
+            black_count += piece_value[char]
 
-    return white_count - black_count
+    return white_count + black_count
 
 # # MAIN
-board = chess.Board("rnbqkb1r/ppp1pppp/5n2/3p2N1/8/8/PPPPPPPP/RNBQKB1R w KQkq - 2 3")
+# board = chess.Board("rnb1qr1k/6bp/2p3pn/pp1pp3/5p1P/5N2/PPPPPPP1/RNBQKB1R w Q - 2 21")
+board = chess.Board("rnbqkbnr/pppppppp/7N/8/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1")
+
 minimax_recur(board, naive_eval, 2)

@@ -24,7 +24,12 @@ def window_swap():
 
 class Board:
     cboard = chess.Board()
-    detection_dim = (169, 284, 822, 822) # top, left, width, height
+
+    # Computer on edge
+    # detection_dim = (169, 284, 822, 822) # top, left, width, height
+
+    # PVP against friend on edge
+    detection_dim = (169,278,835,835)
 
     def __init__(self, side):
         self.side = side # White or black side
@@ -34,6 +39,10 @@ class Board:
         "Values based on the actual mouse distance/coordinates on the screen"
         a1_pos = (307, 962)
         jmp_dist = 110
+
+        # PVP against friend/edge
+        a1_pos = (331,964)
+        jmp_dist = 104
 
         # Generating tiles (mapping of boxes for mouse macros)
         self.tiles = [None] * 64
