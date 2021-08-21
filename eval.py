@@ -6,6 +6,7 @@ import random
 from anytree import Node, RenderTree
 from stopwatch import Stopwatch
 import time
+from board import Board
 
 counter = 0
 recurr_list = []
@@ -75,7 +76,7 @@ def recur_func(cboard, eval, node, turn, alpha, beta):
             eval_score = recur_func(cboard, eval, child, not turn, alpha, beta)
             node.score = eval_score[0]
             node.bmove = eval_score[1]
-        elif turn: # White's turn (max node)
+        elif cboard.turn: # White's turn (max node)
             eval_score = recur_func(cboard, eval, child, not turn, alpha, beta)
 
             # alpha beta pruning
@@ -100,27 +101,77 @@ def recur_func(cboard, eval, node, turn, alpha, beta):
 
     return node.score, node.move
 
-def minimax_recur(cboard, eval, depth):
+
+def recur_func_2(node_info, max_depth, cbrd, eval, depth, alpha, beta): # node_info = [id, parent, move]
+    if cbrd not in recurr_list:
+        recurr_list.append(cbrd)
+        node = Node(name=node_info[0], parent=node_info[1], cboard=cbrd, move=node_info[2], score=None, bmove=None)
+    else:
+        return None, None
+
+    if node.depth == max_depth:
+        node.score = eval(node.cboard)
+        return node.score, node.move
+    else:
+        for move in cbrd.legal_moves:
+            cbrd.push(move)
+            cbrd_modified = cbrd.copy()
+            if node.score == None:
+                if node.move == -1:
+                    return node.score, node.move
+                # print(node.depth)
+                eval_score = recur_func_2([node_info[0]+1, node, move], max_depth, cbrd_modified, eval, depth+1, alpha, beta)
+                node.score = eval_score[0]
+                node.bmove = eval_score[1]
+            elif cbrd.turn: # White's turn (max node)
+                eval_score = recur_func_2([node_info[0]+1, node, move], max_depth, cbrd_modified, eval, depth+1, alpha, beta)
+
+                # alpha beta pruning
+                alpha = max(alpha, eval_score[0])
+                if beta <= alpha:
+                    cbrd.pop()
+                    break
+
+                if node.score < eval_score[0]:
+                    node.score = eval_score[0]
+                    node.bmove = eval_score[1]
+            else: # Black's turn (min node)
+                eval_score = recur_func_2([node_info[0]+1, node, move], max_depth, cbrd_modified, eval, depth+1, alpha, beta)
+
+                # alpha beta pruning
+                beta = min(beta, eval_score[0])
+                if beta <= alpha:
+                    cbrd.pop()
+                    break
+
+                if node.score > eval_score[0]:
+                    node.score = eval_score[0]
+                    node.bmove = eval_score[1]
+            
+            cbrd.pop()
+
+        if node.depth == 0:
+            return node.score, node.bmove, node
+        return node.score, node.move
+        
+
+def minimax_recur(board, eval):
     stopwatch = Stopwatch()
     stopwatch.start()
     global recurr_list
     global counter
 
-    global generate_avg
-    global pop_avg
-    global push_avg
-
     recurr_list = [] # Emptying global cache of board states previously seen, find a better way to design this
-    root = generate_tree(0, None, cboard, None, depth)
+    # root = generate_tree(0, None, cboard, None, depth)
+    # stopwatch.start()
+
+    # Pass in current cboard which will generate node, look through children, recurse
+    test = recur_func_2([0, None, None], board.depth, board.cboard, eval, 0, float('-inf'), float('inf'))
     stopwatch.stop()
     print(str(stopwatch))
-    stopwatch.start()
-    # print(root, root.cboard, root.is_leaf)
-    recur_func(cboard, eval, root, cboard.turn, float('-inf'), float('inf'))
-    stopwatch.stop()
-    print(root.bmove, counter, str(stopwatch))
-    print("generate: ", generate_avg[0]/generate_avg[1], "push: ", push_avg[0]/push_avg[1], "pop: ", pop_avg[0]/pop_avg[1])
-    return cboard.san(root.bmove)
+    print(RenderTree(test[2]))
+    print(test[0], test[1])
+    return board.cboard.san(test[1])
 
 # Picks the first move and returns an AN string
 def first_move(cboard):
@@ -164,7 +215,7 @@ def naive_eval(cboard):
     return white_count + black_count
 
 # # MAIN
-board = chess.Board("rnb1qr1k/6bp/2p3pn/pp1pp3/5p1P/5N2/PPPPPPP1/RNBQKB1R w Q - 2 21")
-board = chess.Board("rnbqkbnr/pppppppp/7N/8/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1")
+board = Board(chess.WHITE)
+board.cboard = chess.Board("rnbqkbnr/ppp1pppp/8/3p4/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 0 1")
 
-minimax_recur(board, naive_eval, 3)
+minimax_recur(board, naive_eval)

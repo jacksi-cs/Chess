@@ -24,7 +24,8 @@ def window_swap():
 
 class Board:
     cboard = chess.Board()
-
+    depth = 4
+    
     # Computer on edge
     # detection_dim = (169, 284, 822, 822) # top, left, width, height
 
