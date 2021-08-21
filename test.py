@@ -1,9 +1,8 @@
 import chess
+board = chess.Board("rnbqkb1r/pp1pnppp/2pN4/4p3/8/7N/PPPPPPPP/R1BQKB1R b KQkq - 3 4")
 
-board = chess.Board()
-
-board.push(chess.Move.from_uci('e2e4'))
-test = board.copy()
-print(test)
-board.pop()
-print(test)
+for move in board.legal_moves:
+    print(move)
+# print(test)
+# board.pop()
+# print(test)

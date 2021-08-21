@@ -104,50 +104,69 @@ def recur_func(cboard, eval, node, turn, alpha, beta):
 
 def recur_func_2(node_info, max_depth, cbrd, eval, depth, alpha, beta): # node_info = [id, parent, move]
     node = Node(name=node_info[0], parent=node_info[1], cboard=cbrd, move=node_info[2], score=None, bmove=None)
+    # print(node.depth, node.cboard.turn)
 
-    if node.depth == max_depth:
+    if node.depth == max_depth or not any(cbrd.legal_moves):
         node.score = eval(node.cboard)
         return node.score, node.move
     else:
+        counter = 0
+        if cbrd.can_claim_draw():
+            print("REEEEEEEEEEEEEEE")
         for move in cbrd.legal_moves:
             cbrd.push(move)
-            cbrd_modified = cbrd.copy()
+            cbrd_modified = chess.Board(cbrd.fen())
+            cbrd.pop()
             if node.score == None:
-                # print(node.depth)
-                eval_score = recur_func_2([node_info[0]+1, node, move], max_depth, cbrd_modified, eval, depth+1, alpha, beta)
+                # print("a", node)
+                eval_score = recur_func_2([counter, node, move], max_depth, cbrd_modified, eval, depth+1, alpha, beta)
                 node.score = eval_score[0]
                 node.bmove = eval_score[1]
             elif cbrd.turn: # White's turn (max node)
-                eval_score = recur_func_2([node_info[0]+1, node, move], max_depth, cbrd_modified, eval, depth+1, alpha, beta)
+                eval_score = recur_func_2([counter, node, move], max_depth, cbrd_modified, eval, depth+1, alpha, beta)
 
                 # alpha beta pruning
                 if eval_score[0] != None:
                     alpha = max(alpha, eval_score[0])
                     if beta <= alpha:
-                        cbrd.pop()
+                        counter += 1
                         break
 
-                    if node.score < eval_score[0]:
-                        node.score = eval_score[0]
-                        node.bmove = eval_score[1]
+                # DEBUG
+                # if eval_score[0] == None:
+                #     print(eval_score, cbrd_modified, node.depth)
+                #     print([counter, node, move], max_depth, cbrd_modified, eval, depth+1, alpha, beta)
+                if node.score < eval_score[0]:
+                    node.score = eval_score[0]
+                    node.bmove = eval_score[1]
             else: # Black's turn (min node)
-                eval_score = recur_func_2([node_info[0]+1, node, move], max_depth, cbrd_modified, eval, depth+1, alpha, beta)
+                eval_score = recur_func_2([counter, node, move], max_depth, cbrd_modified, eval, depth+1, alpha, beta)
 
                 # alpha beta pruning
                 if eval_score[0] != None:
                     beta = min(beta, eval_score[0])
                     if beta <= alpha:
-                        cbrd.pop()
+                        counter += 1
                         break
 
-                    if node.score > eval_score[0]:
-                        node.score = eval_score[0]
-                        node.bmove = eval_score[1]
-            
-            cbrd.pop()
 
+                # DEBUG
+                # if eval_score[0] == None:
+                #     print(eval_score, cbrd_modified, node.depth)
+                #     print([counter, node, move], max_depth, cbrd_modified, eval, depth+1, alpha, beta)
+                if node.score > eval_score[0]:
+                    node.score = eval_score[0]
+                    node.bmove = eval_score[1]
+            
+            counter += 1
+            
         if node.depth == 0:
             return node.score, node.bmove, node
+
+
+        if node.score == None:
+            print(node)
+            print("YEH YOH")
         return node.score, node.move
         
 
@@ -162,10 +181,10 @@ def minimax_recur(board, eval):
     # stopwatch.start()
 
     # Pass in current cboard which will generate node, look through children, recurse
-    test = recur_func_2([0, None, 100], board.depth, board.cboard, eval, 0, float('-inf'), float('inf'))
+    test = recur_func_2([0, None, None], board.depth, board.cboard, eval, 0, float('-inf'), float('inf'))
     stopwatch.stop()
     print(str(stopwatch))
-    # print(RenderTree(test[2]))
+    print(RenderTree(test[2]))
     print(test[0], test[1])
     return board.cboard.san(test[1])
 
@@ -207,6 +226,6 @@ def naive_eval(cboard):
 
 # # MAIN
 board = Board(chess.WHITE)
-board.cboard = chess.Board("rnbqkbnr/pp1p1ppp/2p5/4p3/4N3/8/PPPPPPPP/R1BQKBNR w KQkq - 0 3")
+board.cboard = chess.Board("rnbqkbnr/pppppppp/6N1/8/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1")
 
 minimax_recur(board, naive_eval)
