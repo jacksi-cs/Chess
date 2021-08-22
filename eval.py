@@ -113,6 +113,9 @@ def recur_func_2(node_info, max_depth, cbrd, eval, depth, alpha, beta): # node_i
         counter = 0
         if cbrd.can_claim_draw():
             print("REEEEEEEEEEEEEEE")
+
+        alpha = float('-inf')
+        beta = float('inf')
         for move in cbrd.legal_moves:
             cbrd.push(move)
             cbrd_modified = chess.Board(cbrd.fen())
@@ -126,11 +129,12 @@ def recur_func_2(node_info, max_depth, cbrd, eval, depth, alpha, beta): # node_i
                 eval_score = recur_func_2([counter, node, move], max_depth, cbrd_modified, eval, depth+1, alpha, beta)
 
                 # alpha beta pruning
-                if eval_score[0] != None:
-                    alpha = max(alpha, eval_score[0])
-                    if beta <= alpha:
-                        counter += 1
-                        break
+                # if eval_score[0] != None:
+                alpha = max(alpha, eval_score[0])
+                if beta <= alpha:
+                    print("PLEASE SEE")
+                    counter += 1
+                    break
 
                 # DEBUG
                 # if eval_score[0] == None:
@@ -143,11 +147,12 @@ def recur_func_2(node_info, max_depth, cbrd, eval, depth, alpha, beta): # node_i
                 eval_score = recur_func_2([counter, node, move], max_depth, cbrd_modified, eval, depth+1, alpha, beta)
 
                 # alpha beta pruning
-                if eval_score[0] != None:
-                    beta = min(beta, eval_score[0])
-                    if beta <= alpha:
-                        counter += 1
-                        break
+                # if eval_score[0] != None:
+                beta = min(beta, eval_score[0])
+                if beta <= alpha:
+                    print("PLEASE SEE")
+                    counter += 1
+                    break
 
 
                 # DEBUG
@@ -184,7 +189,7 @@ def minimax_recur(board, eval):
     test = recur_func_2([0, None, None], board.depth, board.cboard, eval, 0, float('-inf'), float('inf'))
     stopwatch.stop()
     print(str(stopwatch))
-    print(RenderTree(test[2]))
+    # print(RenderTree(test[2]))
     print(test[0], test[1])
     return board.cboard.san(test[1])
 
